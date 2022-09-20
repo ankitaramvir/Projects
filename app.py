@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as uReq #used to open the urls
 
 app =Flask(__name__)
-
+git config --global user.email "03ankitaramvirsingh@gmail.com"
 # route to display the home page
 @app.route('/',methods = ['GET'])
 @cross_origin()
@@ -69,7 +69,7 @@ def index():
             review_headers = []
             review = []
             names = []
-            dates = []
+
             while counter < len(l):
                 r = requests.get(l[counter])
                 beutifiyed_html = bs(r.text, 'html.parser')
@@ -88,7 +88,7 @@ def index():
                         review_headers.append(i.text)
                 except:
                     no_header = 'No header'
-                    ratings.append(no_header)
+                    review_headers.append(no_header)
 #review
                 try:
                     review = beutifiyed_html.find_all('div', {'class': 't-ZTKy'})
@@ -96,7 +96,7 @@ def index():
                         review.append(i.text)
                 except:
                     no_review = 'No Review'
-                    ratings.append(no_review)
+                    review.append(no_review)
 #names
                 try:
                     all_names = beutifiyed_html.find_all('p', {"class": "_2sc7ZR _2V5EHH"})
@@ -104,20 +104,11 @@ def index():
                         names.append(i.text)
                 except:
                     no_name = 'No Name'
-                    ratings.append(no_name)
+                    names.append(no_name)
 
-#Dates
-                try:
-                    date = beutifiyed_html.find_all('p', {'class': '_2sc7ZR'})
-                    for i in date:
-                        dates.append(i.text)
-                        date_commented = dates[1::2]
-                except:
-                    no_date = 'No Date'
-                    ratings.append(no_date)
 
                 counter = counter + 1
-            mydict = {"Product": searchstring, "Name": names, "Date": date_commented, "Rating": ratings, "CommentHead": review_headers,"Comment": review}
+            mydict = {"Product": searchstring, "Name": names,  "Rating": ratings, "CommentHead": review_headers,"Comment": review}
             reviews.append(mydict)
             return render_template('results.html', reviews=reviews[0:(len(reviews) - 1)])
 
